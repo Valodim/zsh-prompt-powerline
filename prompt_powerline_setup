@@ -1,0 +1,206 @@
+zmodload -i zsh/parameter || return 1
+# vim: set syntax=zsh:
+
+prompt_powerline_help () {
+    setopt localoptions nocshnullcmd noshnullcmd
+    [[ $ZSH_VERSION < 5.0.0 ]] &&
+	print 'Requires ZSH_VERSION 5.0.0'$'\n'
+    <<-\EOF
+	This is a rather heavy prompt, based on powerline.
+	EOF
+}
+
+prompt_powerline_vcsstyles () {
+    local sep1='⮀'
+    local sep2='⮁'
+
+    local FMT_BRANCH FMT_ACTION FMT_PATH
+
+    # set formats
+    # %b - branchname
+    # %u - unstagedstr (see below)
+    # %c - stangedstr (see below)
+    # %a - action (e.g. rebase-i)
+    # %R - repository path
+    # %S - path in the repository
+    FMT_BRANCH="%b%u%c" # e.g. master¹²
+    FMT_ACTION="(%F{cyan}%a%f)"   # e.g. (rebase-i)
+    FMT_PATH="%K{black}$sep1%F{white} %R/%%F{yellow}%S%F{black}"              # e.g. ~/repo/subdir
+
+    # clean up previously set styles for vcs_info
+    zstyle -d ':vcs_info:*'
+
+    # check-for-changes can be really slow.
+    # you should disable it, if you work with large repositories
+    zstyle ':vcs_info:*:prompt:*' check-for-changes true
+
+    zstyle ':vcs_info:*:prompt:*' unstagedstr '¹'  # display ¹ if there are unstaged changes
+    zstyle ':vcs_info:*:prompt:*' stagedstr '²'    # display ² if there are staged changes
+
+    # non-vcs
+    zstyle ':vcs_info:*:prompt:*' nvcsformats   "%K{black}$sep1%F{white} %3~%F{black} "
+
+    # generic vcs
+    zstyle ':vcs_info:*:prompt:*' formats         "${FMT_PATH} %K{27}$sep1%F{81} %s ${FMT_BRANCH} %F{27}"
+    zstyle ':vcs_info:*:prompt:*' actionformats   "${FMT_PATH} %K{27}$sep1%F{81} %s ${FMT_BRANCH}${FMT_ACTION} %F{27}"
+
+    # special hg stuff
+    zstyle ':vcs_info:hg:prompt:*'  formats       "${FMT_PATH} %K{27}$sep1%F{81} ☿ ${FMT_BRANCH} %F{27} "
+    zstyle ':vcs_info:hg:prompt:*' actionformats  "${FMT_PATH} %K{27}$sep1%F{81} ☿ ${FMT_BRANCH}${FMT_ACTION} %F{27}"
+
+    # special git stuff
+    zstyle ':vcs_info:git:prompt:*' formats       "${FMT_PATH} %K{27}$sep1%F{123} ± ${FMT_BRANCH} %m%F{27}" # 
+    zstyle ':vcs_info:git:prompt:*' actionformats "${FMT_PATH} %K{27}$sep1%F{123} ± ${FMT_BRANCH}${FMT_ACTION} %m%F{27}"
+
+    local -a hooks
+    (( $+powerline_settings[git-st] )) && hooks+=( git-powerline-st )
+    (( $+powerline_settings[git-stash] )) && hooks+=( git-powerline-stash )
+    zstyle ':vcs_info:git*+set-message:*' hooks $hooks
+
+}
+
+# Show remote ref name and number of commits ahead-of or behind
++vi-git-powerline-st () {
+    local ahead behind remote
+    local -a gitstatus
+
+    # Are we on a remote-tracking branch?
+    remote=${$(git rev-parse --verify ${hook_com[branch]}@{upstream} \
+        --symbolic-full-name 2>/dev/null)/refs\/remotes\/}
+
+    if [[ -n ${remote} ]] ; then
+        # for git prior to 1.7
+        # ahead=$(git rev-list origin/${hook_com[branch]}..HEAD | wc -l)
+        ahead=$(git rev-list ${hook_com[branch]}@{upstream}..HEAD 2>/dev/null | wc -l)
+        (( $ahead )) && gitstatus+=( "%B%F{46}+${ahead}%f" )
+
+        # for git prior to 1.7
+        # behind=$(git rev-list HEAD..origin/${hook_com[branch]} | wc -l)
+        behind=$(git rev-list HEAD..${hook_com[branch]}@{upstream} 2>/dev/null | wc -l)
+        (( $behind )) && gitstatus+=( "%B%F{160}-${behind}%f" )
+
+        (( $#gitstatus )) && hook_com[misc]+="${(j:/:)gitstatus} "
+    fi
+}
+
+# Show count of stashed changes
++vi-git-powerline-stash () {
+    local -a stashes
+
+    if [[ -s ${hook_com[base]}/.git/refs/stash ]] ; then
+        stashes=$(git stash list 2>/dev/null | wc -l)
+        [[ -n $stashes ]] && hook_com[misc]+="%F{81}$sep2 %B${stashes} "
+    fi
+}
+
+prompt_powerline_precmd () {
+    setopt localoptions noksharrays unset
+    local sep1='⮀'
+    local sep2='⮁'
+
+    # the variable we add our bits to
+    prompt_bits=
+
+    # add info about localhist status, if there is any
+    if [[ -n $localhist ]]; then
+        # disabled = red, enabled = blue, enabled for parent dir = yellow
+        if [[ -n $localhist_disable ]]; then
+            prompt_bits+="%F{red}⭠ "
+        elif [[ -n $localhist_specific ]]; then
+            prompt_bits+="%F{12}⭠ "
+        else
+            prompt_bits+="%F{yellow}⭠ "
+        fi
+    fi
+
+    # show stats for this dir
+    if [[ ! -O $PWD ]]; then
+        if [[ -w $PWD ]]; then
+            prompt_bits+="%F{blue}⭤ "
+        elif [[ -x $PWD ]]; then
+            prompt_bits+="%F{yellow}⭤ "
+        elif [[ -r $PWD ]]; then
+            prompt_bits+="%F{red}⭤ "
+        fi
+    fi
+    if [[ ! -w $PWD && ! -r $PWD ]]; then
+        prompt_bits+="%F{red}⭤ "
+    fi
+
+    # end the hostname background
+    prompt_bits+="%F{238}"
+
+    if (( $+functions[vcs_info] )) && [[ -z $simple_vcs ]]; then
+        vcs_info 'prompt'
+    else
+        zstyle -g vcs_info_msg_0_ ':vcs_info:*:prompt:*' nvcsformats 
+        if git rev-parse --is-inside-work-tree &> /dev/null; then
+            # strip last space and append a blue segment to indicate we're in a vcs dir
+            vcs_info_msg_0_="${vcs_info_msg_0_[1,-1]}%K{blue}$sep1%F{blue}"
+        fi
+    fi
+}
+
+prompt_powerline_ps1 () {
+    setopt localoptions noksharrays
+    local sep1='⮀'
+    local sep2='⮁'
+
+    # hide username if it's my regular one (anyone else might wanna change this)
+    local user=""
+    if [[ $USER != "valodim" ]]; then
+        user="%(!.%F{red}.%F{247})%n $sep2 "
+    fi
+
+    # bunch of custom hostname colors. for most, t2cc works just fine. :)
+    local -A hostcolors
+    hostcolors=(
+        SteelHooves 245
+        )
+
+    local host_color
+    if [[ -n $hostcolors[$HOST] ]]; then
+        host_color=$(( ${hostcolors[$HOST]} % $(echotc Co) ))
+    else
+        # get a number from the sha1 hash of the hostname
+        host_color=$(sha1sum <<< $HOST | tr -c -d 123456789 | tail -c 15 -)
+        # divide by 256/88/8/whatever
+        host_color=$(( $sum % $(echotc Co) ))
+    fi
+
+    local userhost="${user}%F{$host_color}${HOST}%F{238}"
+
+    # old version, inner-prompt segment
+    # local shlvl="%(2L.%K{104}$sep1%F{white} %L %F{104}.)"
+    # new version, repeated > before host
+    local shlvl="%K{238}%F{$host_color}$sep1${(l:$SHLVL-1::⮁:):-} "
+    local exstat="%(?..%K{red}$sep1%F{white} %B%? %b%F{red})"
+    local jobstat="%(1j.%K{green}$sep1%F{white} %B%j %b%F{green}.)"
+    local gitinfo='${${vcs_info_msg_0_%%.}/$HOME/~}'
+
+    PROMPT="${shlvl}${userhost} \$prompt_bits${exstat}${jobstat}${gitinfo}%k$sep1%b%f "
+}
+
+prompt_powerline_setup () {
+    setopt localoptions noksharrays unset
+
+    # load zsh/termcap
+    zmodload zsh/termcap
+
+    # load vcs_info styles
+    autoload -Uz vcs_info
+    prompt_powerline_vcsstyles 
+
+    # set up left-side prompt
+    prompt_powerline_ps1
+
+    # we know add-zsh-hook has been loaded by promptinit
+    add-zsh-hook precmd prompt_powerline_precmd
+
+    # no multiline so we don't need cr, but we do need both % and $ expansion
+    prompt_opts=( percent subst )
+
+    return 0
+}
+
+[[ -o kshautoload ]] || prompt_powerline_setup "$@"
