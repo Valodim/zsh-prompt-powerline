@@ -10,6 +10,24 @@ For details, see here: https://github.com/Lokaltog/vim-powerline
 This prompt uses promptsubst. It does not use a right-side prompt, although
 RPROMPT will be cleared on load time to ensure compatibility.
 
+Installation
+--
+
+This prompt uses ZSH's own prompt support functions. To install it, simply copy
+prompt\_powerline\_setup into some directory in your $fpath, or add the
+repository to the $fpath array. After that, initialize and set your prompt
+as usual.
+
+    fpath+=( /path/to/zsh-prompt-powerline )
+    autoload promptinit ; promptinit
+    prompt powerline
+
+Unfortunately, there is no way to know at load time if the font used to display
+the prompt will be a powerline patched font (or if there is, I would like to
+hear about it), so compatibility is a matter of heuristics. Personally, I
+simply check if TERM is rxvt-unicode-256 colors in my zshrc and fall back to
+another, simpler prompt if it isn't.
+
 Parameters and Options
 --
 
