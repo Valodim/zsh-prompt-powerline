@@ -1,0 +1,24 @@
+ZSH Powerline Prompt
+==
+
+This is a rather heavyweight zsh prompt, based on the powerline font from the
+popular eponymous vim plugin.
+
+To use it properly, you will obviously need to have a powerline patched font.
+For details, see here: https://github.com/Lokaltog/vim-powerline
+
+This prompt uses promptsubst. It does not use a right-side prompt, although
+RPROMPT will be cleared on load time to ensure compatibility.
+
+Parameters and Options
+--
+
+This prompt does not take parameters or options at this point. This will
+probably change soonish.
+
+vcs\_info
+--
+
+This prompt supports vcs\_info. While inside a repository, the current branch
+name will be displayed, along with some info about the state of the working
+tree, the staging area, stashed commits, and the remote tracked branch.
