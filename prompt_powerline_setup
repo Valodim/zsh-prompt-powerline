@@ -21,35 +21,40 @@ prompt_powerline_vcsstyles () {
     local FMT_ACTION="(%F{cyan}%a%f)"   # e.g. (rebase-i)
     local FMT_PATH="%K{black}$sep1%F{white} %R/%%F{yellow}%S%F{black}"              # e.g. ~/repo/subdir
 
-    # clean up previously set styles for vcs_info
-    zstyle -d ':vcs_info:*'
+    # check-for-changes can be really slow...
+    zstyle ':vcs_info:*:powerline:*' check-for-changes true
 
-    # check-for-changes can be really slow.
-    # you should disable it, if you work with large repositories
-    zstyle ':vcs_info:*:prompt:*' check-for-changes true
+    # we only use one, so onl pay for one.
+    zstyle ':vcs_info:*:powerline:*' max-exports 1
 
-    zstyle ':vcs_info:*:prompt:*' unstagedstr '¹'  # display ¹ if there are unstaged changes
-    zstyle ':vcs_info:*:prompt:*' stagedstr '²'    # display ² if there are staged changes
+    zstyle ':vcs_info:*:powerline:*' unstagedstr '¹'  # display ¹ if there are unstaged changes
+    zstyle ':vcs_info:*:powerline:*' stagedstr '²'    # display ² if there are staged changes
 
     # non-vcs
-    zstyle ':vcs_info:*:prompt:*' nvcsformats   "%K{black}$sep1%F{white} %3~%F{black} "
+    zstyle ':vcs_info:*:powerline:*' nvcsformats   "%K{black}$sep1%F{white} %3~%F{black} "
 
     # generic vcs
-    zstyle ':vcs_info:*:prompt:*' formats         "${FMT_PATH} %K{27}$sep1%F{81} %s ${FMT_BRANCH} %F{27}"
-    zstyle ':vcs_info:*:prompt:*' actionformats   "${FMT_PATH} %K{27}$sep1%F{81} %s ${FMT_BRANCH}${FMT_ACTION} %F{27}"
+    zstyle ':vcs_info:*:powerline:*' formats         "${FMT_PATH} %K{27}$sep1%F{123} %s ${FMT_BRANCH} %F{27}"
+    zstyle ':vcs_info:*:powerline:*' actionformats   "${FMT_PATH} %K{27}$sep1%F{123} %s ${FMT_BRANCH}${FMT_ACTION} %F{27}"
 
     # special hg stuff
-    zstyle ':vcs_info:hg:prompt:*'  formats       "${FMT_PATH} %K{27}$sep1%F{81} ☿ ${FMT_BRANCH} %F{27} "
-    zstyle ':vcs_info:hg:prompt:*' actionformats  "${FMT_PATH} %K{27}$sep1%F{81} ☿ ${FMT_BRANCH}${FMT_ACTION} %F{27}"
+    zstyle ':vcs_info:hg:powerline:*'  formats       "${FMT_PATH} %K{27}$sep1%F{123} ☿ ${FMT_BRANCH} %F{27} "
+    zstyle ':vcs_info:hg:powerline:*' actionformats  "${FMT_PATH} %K{27}$sep1%F{123} ☿ ${FMT_BRANCH}${FMT_ACTION} %F{27}"
 
     # special git stuff
-    zstyle ':vcs_info:git:prompt:*' formats       "${FMT_PATH} %K{27}$sep1%F{123} ± ${FMT_BRANCH} %m%F{27}" # 
-    zstyle ':vcs_info:git:prompt:*' actionformats "${FMT_PATH} %K{27}$sep1%F{123} ± ${FMT_BRANCH}${FMT_ACTION} %m%F{27}"
+    zstyle ':vcs_info:git:powerline:*' formats       "${FMT_PATH} %K{27}$sep1%F{123} ± ${FMT_BRANCH} %m%F{27}" # 
+    zstyle ':vcs_info:git:powerline:*' actionformats "${FMT_PATH} %K{27}$sep1%F{123} ± ${FMT_BRANCH}${FMT_ACTION} %m%F{27}"
+
+    # lofi formats
+    # for details see here: https://github.com/Valodim/zshrc/blob/master/custom/96-vcs_info-lofi.zsh
+    zstyle ':vcs_info:*:powerline:*'   lofiformats   "%K{black}$sep1%F{white} %3~%F{black} %K{27}$sep1%F{123} %s %F{27}"
+    zstyle ':vcs_info:hg:powerline:*'  lofiformats   "%K{black}$sep1%F{white} %3~%F{black} %K{27}$sep1%F{123} ☿ %F{27}"
+    zstyle ':vcs_info:git:powerline:*' lofiformats   "%K{black}$sep1%F{white} %3~%F{black} %K{27}$sep1%F{123} ± %F{27}"
 
     local -a hooks
     hooks+=( git-powerline-st )
     hooks+=( git-powerline-stash )
-    zstyle ':vcs_info:git*+set-message:*' hooks $hooks
+    zstyle ':vcs_info:git*+set-message:powerline:*' hooks $hooks
 
 }
 
@@ -122,15 +127,8 @@ prompt_powerline_precmd () {
     # end the hostname background
     prompt_bits+="%F{238}"
 
-    if (( $+functions[vcs_info] )) && [[ -z $simple_vcs ]]; then
-        vcs_info 'prompt'
-    else
-        zstyle -g vcs_info_msg_0_ ':vcs_info:*:prompt:*' nvcsformats 
-        if git rev-parse --is-inside-work-tree &> /dev/null; then
-            # strip last space and append a blue segment to indicate we're in a vcs dir
-            vcs_info_msg_0_="${vcs_info_msg_0_[1,-1]}%K{blue}$sep1%F{blue}"
-        fi
-    fi
+    vcs_info 'powerline'
+
 }
 
 prompt_powerline_ps1 () {
