@@ -153,7 +153,7 @@ prompt_powerline_ps1 () {
         # get a number from the sha1 hash of the hostname
         host_color=$(sha1sum <<< $HOST | tr -c -d 123456789 | tail -c 15 -)
         # divide by 256/88/8/whatever
-        host_color=$(( $sum % $(echotc Co) ))
+        host_color=$(( host_color % $(echotc Co) ))
     fi
 
     local userhost="${user}%F{$host_color}${HOST}%F{238}"
