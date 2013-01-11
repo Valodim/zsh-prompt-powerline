@@ -140,15 +140,9 @@ prompt_powerline_ps1 () {
         user="%(!.%F{red}.%F{247})%n $sep2 "
     fi
 
-    # bunch of custom hostname colors. for most, t2cc works just fine. :)
-    local -A hostcolors
-    hostcolors=(
-        SteelHooves 245
-        )
-
     local host_color
-    if [[ -n $hostcolors[$HOST] ]]; then
-        host_color=$(( ${hostcolors[$HOST]} % $(echotc Co) ))
+    if zstyle -s ':prompt:powerline:ps1' host-color host_color; then
+        host_color=$(( ${host_color} % $(echotc Co) ))
     else
         # get a number from the sha1 hash of the hostname
         host_color=$(sha1sum <<< $HOST | tr -c -d 123456789 | tail -c 15 -)
