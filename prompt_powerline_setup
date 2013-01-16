@@ -156,7 +156,7 @@ prompt_powerline_setup () {
     add-zsh-hook precmd prompt_powerline_precmd
 
     # no multiline so we don't need cr, but we do need both % and $ expansion
-    prompt_opts=( percent subst )
+    prompt_opts=( percent subst cr )
 
     return 0
 }
