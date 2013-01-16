@@ -110,12 +110,12 @@ prompt_powerline_ps1 () {
 
     local host_color
     if zstyle -s ':prompt:powerline:ps1' host-color host_color; then
-        host_color=$(( ${host_color} % $(echotc Co) ))
+        host_color=$(( ${host_color} % $(echoti colors) ))
     else
         # get a number from the sha1 hash of the hostname
         host_color=$(sha1sum <<< $HOST | tr -c -d 123456789 | tail -c 15 -)
         # divide by 256/88/8/whatever
-        host_color=$(( host_color % $(echotc Co) ))
+        host_color=$(( host_color % $(echoti colors) ))
     fi
 
     local userhost="${user}%F{$host_color}${HOST}%F{238}"
@@ -140,7 +140,7 @@ prompt_powerline_setup () {
     local sep2='⮁'
 
     # load zsh/termcap
-    zmodload zsh/termcap
+    zmodload zsh/terminfo
 
     # load vcs_info styles
     autoload -Uz vcs_info
