@@ -120,7 +120,7 @@ prompt_powerline_ps1 () {
     local host_color
     if ! zstyle -s ":prompt:powerline:ps1:${HOST}" host-color host_color; then
         # get a number from the sha1 hash of the hostname
-        host_color=${${"$(sha1sum <<< $HOST)"//[a-z]#/}[1,5]}
+        host_color=${${"$(sha1sum <<< $HOST)"//[a-z]#/}[1,16]}
         # divide by 256/88/8/whatever
         host_color=$(( host_color % $(echoti colors) ))
     fi
