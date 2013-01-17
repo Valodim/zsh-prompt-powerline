@@ -47,9 +47,9 @@ prompt_powerline_vcsstyles () {
 
     # lofi formats
     # for details see here: https://github.com/Valodim/zshrc/blob/master/custom/96-vcs_info-lofi.zsh
-    zstyle ':vcs_info:*:powerline:*'   lofiformats   "%K{black}$sep1%F{white} %3~%F{black} %K{27}$sep1%F{123} %s %F{27}"
-    zstyle ':vcs_info:hg:powerline:*'  lofiformats   "%K{black}$sep1%F{white} %3~%F{black} %K{27}$sep1%F{123} ☿ %F{27}"
-    zstyle ':vcs_info:git:powerline:*' lofiformats   "%K{black}$sep1%F{white} %3~%F{black} %K{27}$sep1%F{123} ± %F{27}"
+    zstyle ':vcs_info:*:powerline:*'   lofiformats   "${FMT_PATH} %K{27}$sep1%F{123} %s %F{27}"
+    zstyle ':vcs_info:hg:powerline:*'  lofiformats   "${FMT_PATH} %K{27}$sep1%F{123} ☿ %F{27}"
+    zstyle ':vcs_info:git:powerline:*' lofiformats   "${FMT_PATH} %K{27}$sep1%F{123} ± %F{27}"
 
     # see https://github.com/Valodim/zshrc/blob/master/custom/96-vcs_info-githooks.zsh
     # tracking formats: behind, ahead and seperator
