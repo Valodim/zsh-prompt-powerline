@@ -31,8 +31,18 @@ another, simpler prompt if it isn't.
 Parameters and Options
 --
 
-This prompt does not take parameters or options at this point. This will
-probably change soonish.
+This prompt is configured using zstyles.
+
+    zstyle ':prompt:powerline:ps1' hide-user
+
+If this style is true, the user will not be displayed. This is
+useful to hide uninteresting usernames like a default one.
+
+    zstyle ':prompt:powerline:ps1' host-color
+
+This sets an explicit color to use for the hostname. If this is not set,
+a color will be generated from the hostname.
+
 
 vcs\_info
 --

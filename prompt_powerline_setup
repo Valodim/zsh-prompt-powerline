@@ -9,6 +9,16 @@ prompt_powerline_help () {
         This is a rather heavyweight zsh prompt, based on the powerline font
         from the popular eponymous vim plugin.
 
+        This prompt is configured using zstyles:
+            # whether the user should be hidden. you can use this to not
+            # display a username if it's your default one, or only show it
+            # if this is a remote shell, e.g. [[ -n $SSH_CONNECTION ]]
+            zstyle ':prompt:powerline:ps1' hide-user
+
+            # explicit color used for the hostname, otherwise a hash-based one
+            # will be selected
+            zstyle ':prompt:powerline:ps1' host-color
+
         For a (more) detailed readme, see here:
         https://github.com/Valodim/zsh-prompt-powerline/blob/master/readme.mkd
 	EOF
@@ -105,30 +115,24 @@ prompt_powerline_precmd () {
 }
 
 prompt_powerline_ps1 () {
-    setopt localoptions noksharrays
-
-    # hide username if it's my regular one (anyone else might wanna change this)
-    local user=""
-    if [[ $USER != "valodim" ]]; then
-        user="%(!.%F{red}.%F{247})%n $sep2 "
-    fi
+    setopt localoptions noksharrays extendedglob
 
     local host_color
-    if zstyle -s ':prompt:powerline:ps1' host-color host_color; then
-        host_color=$(( ${host_color} % $(echoti colors) ))
-    else
+    if ! zstyle -s ':prompt:powerline:ps1' host-color host_color; then
         # get a number from the sha1 hash of the hostname
-        host_color=$(sha1sum <<< $HOST | tr -c -d 123456789 | tail -c 15 -)
+        host_color=${${"$(sha1sum <<< $HOST)"//[a-z]#/}[1,5]}
         # divide by 256/88/8/whatever
         host_color=$(( host_color % $(echoti colors) ))
     fi
 
-    local userhost="${user}%F{$host_color}${HOST}%F{238}"
+    # hide username if it's my regular one (anyone else might wanna change this)
+    local user=""
+    if ! zstyle -t ':prompt:powerline:ps1' hide-user; then
+        user=" %F{247}$sep2 %(!.%F{red}.)%n"
+    fi
 
-    # old version, inner-prompt segment
-    # local shlvl="%(2L.%K{104}$sep1%F{white} %L %F{104}.)"
-    # new version, repeated > before host
     local shlvl="%K{238}%F{$host_color}$sep1${(l:$SHLVL-1::⮁:):-} "
+    local userhost="%F{$host_color}${HOST}${user}"
     local exstat="%(?..%K{red}$sep1%F{white} %B%? %b%F{red})"
     local jobstat="%(1j.%K{green}$sep1%F{white} %B%j %b%F{green}.)"
     local gitinfo='${${vcs_info_msg_0_%%.}/$HOME/~}'
