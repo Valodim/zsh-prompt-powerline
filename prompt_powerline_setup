@@ -31,9 +31,6 @@ prompt_powerline_vcsstyles () {
     local FMT_ACTION="(%F{cyan}%a%f)"   # e.g. (rebase-i)
     local FMT_PATH="%K{black}$sep1%F{white} %R/%%F{yellow}%S%F{black}"              # e.g. ~/repo/subdir
 
-    # check-for-changes can be really slow...
-    zstyle ':vcs_info:*:powerline:*' check-for-changes true
-
     # we only use one, so onl pay for one.
     zstyle ':vcs_info:*:powerline:*' max-exports 1
 
@@ -63,7 +60,7 @@ prompt_powerline_vcsstyles () {
 
     # see https://github.com/Valodim/zshrc/blob/master/custom/96-vcs_info-githooks.zsh
     # tracking formats: behind, ahead and seperator
-    zstyle ':vcs_info:git:powerline:*' trackingformats "%%F{46}+%a%%f" "%%F{160}-%b%%f" "%%F{46}+%a% / %f%%F{160}-%b%%f"
+    zstyle ':vcs_info:git:powerline:*' trackingformats "%%F{46}+%a%%f" "%%F{160}-%b%%f" "%%F{46}+%a%%F{123}/%f%%F{160}-%b%%f"
 
     # stash format
     zstyle ':vcs_info:git:powerline:*' stashformat "%%F{81}$sep2 %%B%s "

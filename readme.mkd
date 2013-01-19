@@ -43,10 +43,11 @@ useful to hide uninteresting usernames like a default one.
 This sets an explicit color to use for the hostname. If this is not set,
 a color will be generated from the hostname.
 
+    zstyle ':vcs_info:*:powerline:*' check-for-changes
 
-vcs\_info
---
+This is a regular vcs\_info style, I mention it here because it is relevant. If
+this style is true, the dirty working tree and staged changes indicators will
+be shown inside repositories. This can be slow on big repositories, decide for
+yourself if you find it worthwhile.
 
-This prompt supports vcs\_info. While inside a repository, the current branch
-name will be displayed, along with some info about the state of the working
-tree, the staging area, stashed commits, and the remote tracked branch.
+
