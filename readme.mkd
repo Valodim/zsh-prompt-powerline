@@ -2,13 +2,52 @@ ZSH Powerline Prompt
 ==
 
 This is a rather heavyweight zsh prompt, based on the powerline font from the
-popular eponymous vim plugin.
+popular eponymous vim plugin, which works for a dark background.
 
 To use it properly, you will obviously need to have a powerline patched font.
 For details, see here: https://github.com/Lokaltog/vim-powerline
 
 This prompt uses promptsubst. It does not use a right-side prompt, although
 RPROMPT will be cleared on load time to ensure compatibility.
+
+
+Overview
+--
+
+The prompt has a number of informational tidbits, most of which are shown only
+when relevant. The minimal appearance in my regular setup looks like this:
+
+![](http://mugenguild.com/~valodim/powerline/powerline1.png)
+
+Without configuration, a username is also shown. However, I find this to be an
+unnecessary piece of information, so I usually hide it if it's my default
+username. This can be configured using a zstyle. In directories which are not
+owned or not writable by $UID, a lock is shown, its color indicating the
+read/write status:
+
+![](http://mugenguild.com/~valodim/powerline/powerline2.png)
+
+Running background jobs and non-zero return values adds extra segments:
+
+![](http://mugenguild.com/~valodim/powerline/powerline3.png)
+
+If $PWD is inside a repository, info about that is displayed as well. In its
+vanilla form, a repository type is shown, next to the current branch name, and
+two small indicators for changes in the working tree and staging area.  The
+path segment inside the repository is also colored differently:
+
+![](http://mugenguild.com/~valodim/powerline/powerline4.png)
+
+With additional hooks, info about tracked branches and stashed commits can be
+shown for git repositories:
+
+![](http://mugenguild.com/~valodim/powerline/powerline5.png)
+
+Using a different hook, a lo-fi-mode is supported which shows only the type of
+the repository and its subpath, avoiding the load times for more info:
+
+![](http://mugenguild.com/~valodim/powerline/powerline6.png)
+
 
 Installation
 --
@@ -27,6 +66,10 @@ the prompt will be a powerline patched font (or if there is, I would like to
 hear about it), so compatibility is a matter of heuristics. Personally, I
 simply check if TERM is rxvt-unicode-256 colors in my zshrc and fall back to
 another, simpler prompt if it isn't.
+
+For some sample configs, and vcs\_info hooks for extended functionality, check
+out example\_config.zsh.
+
 
 Parameters and Options
 --
