@@ -3,8 +3,13 @@
 # various configuration features and three hooks for vcs_info which you may or
 # may not find helpful, and which are supported by the powerline prompt.
 
+# this entire script is very optional and meant to address all capabilities.
+# to just use the prompt in a sane default config, it suffices to have the
+# prompt_powerline_setup file somewhere in your $fpath, autoload and run
+# promptinit, and then run prompt powerline.
+
 # add the directory this file resides in to fpath
-fpath+=( .(:a) )
+fpath+=( $0(:h:a) )
 
 # initialize the prompt contrib
 autoload promptinit && promptinit || return 1
@@ -18,7 +23,6 @@ zmodload zsh/parameter
 # rxvt-unicode, chances are good. note that most zstyles have to be set before
 # the prompt is loaded since they are not continuously re-evaluated.
 [[ $TERM == "rxvt-unicode-256color" ]] || return 3
-
 
 ### additional zstyles
 
