@@ -98,6 +98,14 @@ This is the SHLVL value that will be assumed to be the top level. This should
 be set so there is one arrow at the left side of the prompt for each process we
 are below that top level.
 
+    zstyle ':prompt:powerline:ps1' no-signal-names
+    zstyle ':prompt:powerline:ps1' no-stopsig-names
+
+If the first one is set to true, exit codes will not be translated to signal
+names. If only the second one is true, only stop signals will be left
+untranslated, which may be useful since these numbers are around 20, unlike all
+other translated signals which start at 129.
+
     zstyle ':vcs_info:*:powerline:*' check-for-changes
 
 This is a regular vcs\_info style, I mention it here because it is relevant. If

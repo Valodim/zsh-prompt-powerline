@@ -113,25 +113,31 @@ prompt_powerline_precmd () {
 
     # any signal?
     if (( exstat > 0 )); then
-        zstyle -t ':prompt:powerline:ps1' no-signal-names || case $exstat in
-            129)  exstat=HUP ;;
-            130)  exstat=INT ;;
-            131)  exstat=QUIT ;;
-            132)  exstat=ILL ;;
-            134)  exstat=ABRT ;;
-            136)  exstat=FPE ;;
-            137)  exstat=KILL ;;
-            139)  exstat=SEGV ;;
-            141)  exstat=PIPE ;;
-            143)  exstat=TERM ;;
-            # assuming we are on an x86 system here
-            # this MIGHT get annoying since those are in a range of exit codes
-            # programs sometimes use.... we'll see.
-            19)  exstat=STOP ;;
-            20)  exstat=TSTP ;;
-            21)  exstat=TTIN ;;
-            22)  exstat=TTOU ;;
-        esac
+        if ! zstyle -t ':prompt:powerline:ps1' no-signal-names; then
+            case $exstat in
+                129)  exstat=HUP ;;
+                130)  exstat=INT ;;
+                131)  exstat=QUIT ;;
+                132)  exstat=ILL ;;
+                134)  exstat=ABRT ;;
+                136)  exstat=FPE ;;
+                137)  exstat=KILL ;;
+                139)  exstat=SEGV ;;
+                141)  exstat=PIPE ;;
+                143)  exstat=TERM ;;
+            esac
+            if ! zstyle -t ':prompt:powerline:ps1' no-stopsig-names; then
+                case $exstat in
+                    # assuming we are on an x86 system here
+                    # this MIGHT get annoying since those are in a range of exit codes
+                    # programs sometimes use.... we'll see.
+                    19)  exstat=STOP ;;
+                    20)  exstat=TSTP ;;
+                    21)  exstat=TTIN ;;
+                    22)  exstat=TTOU ;;
+                esac
+            fi
+        fi
 
         prompt_bits+="%K{red}$sep1%F{white} %B$exstat %b%F{red}"
     fi
