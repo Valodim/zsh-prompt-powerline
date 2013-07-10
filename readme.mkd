@@ -76,6 +76,12 @@ Parameters and Options
 
 This prompt is configured using zstyles.
 
+    zstyle ':prompt:powerline:ps1' sep1-char
+    zstyle ':prompt:powerline:ps1' sep2-char
+
+These two styles allow specifying the powerline seperator characters to be used
+in the prompt. They default to '⮀' and '⮁' respectively.
+
     zstyle ':prompt:powerline:ps1' hide-user
 
 If this style is true, the user will not be displayed. This is

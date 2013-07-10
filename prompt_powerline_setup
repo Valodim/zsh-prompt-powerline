@@ -73,8 +73,9 @@ prompt_powerline_precmd () {
     local exstat=$?
 
     # have those here as well
-    local sep1='⮀'
-    local sep2='⮁'
+    local sep1 sep2
+    zstyle -s ':prompt:poweline:ps1:' sep1-char sep1 || sep1='⮀'
+    zstyle -s ':prompt:poweline:ps1:' sep2-char sep2 || sep2='⮁'
 
     setopt localoptions noksharrays unset
 
@@ -183,8 +184,9 @@ prompt_powerline_setup () {
 
     [[ $ZSH_VERSION < 4.3 ]] && return 1
 
-    local sep1='⮀'
-    local sep2='⮁'
+    local sep1 sep2
+    zstyle -s ':prompt:poweline:ps1:' sep1-char sep1 || sep1='⮀'
+    zstyle -s ':prompt:poweline:ps1:' sep2-char sep2 || sep2='⮁'
 
     # load zsh/termcap
     zmodload zsh/terminfo
