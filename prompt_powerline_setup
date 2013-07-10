@@ -68,6 +68,14 @@ prompt_powerline_vcsstyles () {
 }
 
 prompt_powerline_precmd () {
+
+    # preserv exitstatus for later
+    local exstat=$?
+
+    # have those here as well
+    local sep1='⮀'
+    local sep2='⮁'
+
     setopt localoptions noksharrays unset
 
     # the variable we add our bits to
@@ -102,6 +110,31 @@ prompt_powerline_precmd () {
     # end the hostname background
     prompt_bits+="%F{238}"
 
+    # any signal?
+    if (( exstat > 0 )); then
+        zstyle -t ':prompt:powerline:ps1' no-signal-names || case $exstat in
+            129)  exstat=HUP ;;
+            130)  exstat=INT ;;
+            131)  exstat=QUIT ;;
+            132)  exstat=ILL ;;
+            134)  exstat=ABRT ;;
+            136)  exstat=FPE ;;
+            137)  exstat=KILL ;;
+            139)  exstat=SEGV ;;
+            141)  exstat=PIPE ;;
+            143)  exstat=TERM ;;
+            # assuming we are on an x86 system here
+            # this MIGHT get annoying since those are in a range of exit codes
+            # programs sometimes use.... we'll see.
+            19)  exstat=STOP ;;
+            20)  exstat=TSTP ;;
+            21)  exstat=TTIN ;;
+            22)  exstat=TTOU ;;
+        esac
+
+        prompt_bits+="%K{red}$sep1%F{white} %B$exstat %b%F{red}"
+    fi
+
     local custom_bits
     if zstyle -s ':prompt:powerline:ps1' custom-bits custom_bits ''; then
         prompt_bits+="$custom_bits"
@@ -130,11 +163,10 @@ prompt_powerline_ps1 () {
 
     local shlvl="%K{238}%F{$host_color}$sep1${(l:$SHLVL-1::⮁:):-} "
     local userhost="%F{$host_color}${HOST}${user}"
-    local exstat="%(?..%K{red}$sep1%F{white} %B%? %b%F{red})"
     local jobstat="%(1j.%K{green}$sep1%F{white} %B%j %b%F{green}.)"
     local gitinfo='${${vcs_info_msg_0_%%.}/$HOME/~}'
 
-    PROMPT="${shlvl}${userhost} \$prompt_bits${exstat}${jobstat}${gitinfo}%k$sep1%b%f "
+    PROMPT="${shlvl}${userhost} \$prompt_bits${jobstat}${gitinfo}%k$sep1%b%f "
 }
 
 prompt_powerline_setup () {
