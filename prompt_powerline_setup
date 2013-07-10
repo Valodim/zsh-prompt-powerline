@@ -135,6 +135,10 @@ prompt_powerline_precmd () {
         prompt_bits+="%K{red}$sep1%F{white} %B$exstat %b%F{red}"
     fi
 
+    # use this to add custom segments
+    # to match colors properly, you will need to have a format like this,
+    # assuming bg is your background and fg is your foreground color:
+    #   %K{bg}%F{fg}text%F{bg}
     local custom_bits
     if zstyle -s ':prompt:powerline:ps1' custom-bits custom_bits ''; then
         prompt_bits+="$custom_bits"
@@ -161,7 +165,12 @@ prompt_powerline_ps1 () {
         user=" %F{247}$sep2 %(!.%F{red}.)%n"
     fi
 
-    local shlvl="%K{238}%F{$host_color}$sep1${(l:$SHLVL-1::⮁:):-} "
+    integer default_level
+    zstyle -s ':prompt:powerline:ps1' default-sh-level default_level || default_level=1
+    # using eval here because (l::) expansion flag doesn't support variables.
+    # someone who can sneak in variables here can do code execution anyways~
+    eval 'local shlvl="%K{238}%F{$host_color}$sep1${(l:$SHLVL-$default_level::'$sep2':):-} "'
+
     local userhost="%F{$host_color}${HOST}${user}"
     local jobstat="%(1j.%K{green}$sep1%F{white} %B%j %b%F{green}.)"
     local gitinfo='${${vcs_info_msg_0_%%.}/$HOME/~}'

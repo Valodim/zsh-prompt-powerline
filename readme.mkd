@@ -86,6 +86,12 @@ useful to hide uninteresting usernames like a default one.
 This sets an explicit color to use for the hostname. If this is not set,
 a color will be generated from the hostname.
 
+    zstyle ':prompt:powerline:ps1' default-sh-level
+
+This is the SHLVL value that will be assumed to be the top level. This should
+be set so there is one arrow at the left side of the prompt for each process we
+are below that top level.
+
     zstyle ':vcs_info:*:powerline:*' check-for-changes
 
 This is a regular vcs\_info style, I mention it here because it is relevant. If
