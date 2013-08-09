@@ -29,7 +29,7 @@ prompt_powerline_vcsstyles () {
     # set formats
     local FMT_BRANCH="%b%u%c" # e.g. master¹²
     local FMT_ACTION="(%F{cyan}%a%f)"   # e.g. (rebase-i)
-    local FMT_PATH="%K{black}$sep1%F{white} %R/%%F{yellow}%S%F{black}"              # e.g. ~/repo/subdir
+    local FMT_PATH="%K{black}$sep1%F{white} %R%%F{yellow}/%f%S%F{black}"              # e.g. ~/repo/subdir
 
     # we only use one, so onl pay for one.
     zstyle ':vcs_info:*:powerline:*' max-exports 1
@@ -38,7 +38,7 @@ prompt_powerline_vcsstyles () {
     zstyle ':vcs_info:*:powerline:*' stagedstr '²'    # display ² if there are staged changes
 
     # non-vcs
-    zstyle ':vcs_info:*:powerline:*' nvcsformats   "%K{black}$sep1%F{white} %3~%F{black} "
+    zstyle ':vcs_info:*:powerline:*' nvcsformats   "%K{black}$sep1%F{white} %1v%F{black} "
 
     # generic vcs
     zstyle ':vcs_info:*:powerline:*' formats         "${FMT_PATH} %K{27}$sep1%F{123} %s ${FMT_BRANCH} %F{27}"
@@ -142,6 +142,13 @@ prompt_powerline_precmd () {
         prompt_bits+="%K{red}$sep1%F{white} %B$exstat %b%F{red}"
     fi
 
+    if ! zstyle -t ':prompt:powerline:ps1:' no-disambiguate && (( $+functions[disambiguate-keeplast] )); then
+        disambiguate-keeplast
+        psvar[1]=$REPLY
+    else
+        psvar[1]=${(%):-%3~}
+    fi
+
     # use this to add custom segments
     # to match colors properly, you will need to have a format like this,
     # assuming bg is your background and fg is your foreground color:
@@ -199,7 +206,11 @@ prompt_powerline_setup () {
 
     # load vcs_info styles
     autoload -Uz vcs_info
-    prompt_powerline_vcsstyles 
+    prompt_powerline_vcsstyles
+
+    # if disambiguate-keeplast is available, load it
+    local -a tmp; tmp=( $^fpath/disambiguate-keeplast(N) )
+    (( $#tmp > 0 )) && autoload -U disambiguate-keeplast
 
     # set up left-side prompt
     prompt_powerline_ps1
