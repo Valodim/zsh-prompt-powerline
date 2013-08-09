@@ -189,7 +189,11 @@ prompt_powerline_ps1 () {
     local jobstat="%(1j.%K{green}$sep1%F{white} %B%j %b%F{green}.)"
     local gitinfo='${${vcs_info_msg_0_%%.}/$HOME/~}'
 
-    PROMPT="${shlvl}${userhost} \$prompt_bits${jobstat}${gitinfo}%k$sep1%b%f "
+    PS1="${shlvl}${userhost} \$prompt_bits${jobstat}${gitinfo}%k$sep1%b%f "
+}
+
+prompt_powerline_ps2 () {
+    PS2="%K{black}$sep2 %_ %F{black}%k$sep1%b%f "
 }
 
 prompt_powerline_setup () {
@@ -214,6 +218,7 @@ prompt_powerline_setup () {
 
     # set up left-side prompt
     prompt_powerline_ps1
+    prompt_powerline_ps2
 
     # clear right-side prompt
     RPROMPT=
