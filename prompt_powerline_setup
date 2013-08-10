@@ -161,7 +161,9 @@ prompt_powerline_ps1 () {
 
     local userhost="%F{$host_color}${HOST}${user}"
     local jobstat="%(1j.%K{green}$sep1%F{white} %B%j %b%F{green}.)"
-    local gitinfo='${vcs_info_msg_0_}'
+    # we do the $HOME replacement here to avoid annoyingly long paths. It's not
+    # as good as (D), but oh well!
+    local gitinfo='${${vcs_info_msg_0_%%.}/$HOME/~}'
 
     PS1="${shlvl}${userhost} \$prompt_bits${jobstat}${gitinfo}%k$sep1%b%f "
 }
