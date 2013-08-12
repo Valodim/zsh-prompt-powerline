@@ -137,7 +137,7 @@ this style is true, the dirty working tree and staged changes indicators will
 be shown inside repositories. This can be slow on big repositories, decide for
 yourself if you find it worthwhile.
 
-    zstyle ':prompt:*:ps1' precmd-hooks
+    zstyle ':prompt:powerline:ps1' precmd-hooks
 
 This is an array of hooks which are called in the precmd function, after all
 settings are loaded. This can be used in various ways, like adding segments or
