@@ -41,22 +41,22 @@ prompt_powerline_vcsstyles () {
     zstyle ':vcs_info:*:powerline:*' nvcsformats   "%K{black}$sep1%F{white} %1v%F{black} "
 
     # generic vcs
-    zstyle ':vcs_info:*:powerline:*' formats         "${FMT_PATH} %K{27}$sep1%F{123} %s ${FMT_BRANCH} %F{27}"
-    zstyle ':vcs_info:*:powerline:*' actionformats   "${FMT_PATH} %K{27}$sep1%F{123} %s ${FMT_BRANCH}${FMT_ACTION} %F{27}"
+    zstyle ':vcs_info:*:powerline:*' formats         "%K{23}$sep1%F{123} %s ${FMT_BRANCH} %F{23}${FMT_PATH} "
+    zstyle ':vcs_info:*:powerline:*' actionformats   "%K{23}$sep1%F{123} %s ${FMT_BRANCH}${FMT_ACTION} %F{23}${FMT_PATH} "
 
     # special hg stuff
-    zstyle ':vcs_info:hg:powerline:*'  formats       "${FMT_PATH} %K{27}$sep1%F{123} ☿ ${FMT_BRANCH} %F{27} "
-    zstyle ':vcs_info:hg:powerline:*' actionformats  "${FMT_PATH} %K{27}$sep1%F{123} ☿ ${FMT_BRANCH}${FMT_ACTION} %F{27}"
+    zstyle ':vcs_info:hg:powerline:*'  formats       "%K{23}$sep1%F{123} ☿ ${FMT_BRANCH} %F{23} ${FMT_PATH} "
+    zstyle ':vcs_info:hg:powerline:*' actionformats  "%K{23}$sep1%F{123} ☿ ${FMT_BRANCH}${FMT_ACTION} %F{23}${FMT_PATH} "
 
     # special git stuff
-    zstyle ':vcs_info:git:powerline:*' formats       "${FMT_PATH} %K{27}$sep1%F{123} ± ${FMT_BRANCH} %m%F{27}" # 
-    zstyle ':vcs_info:git:powerline:*' actionformats "${FMT_PATH} %K{27}$sep1%F{123} ± ${FMT_BRANCH}${FMT_ACTION} %m%F{27}"
+    zstyle ':vcs_info:git:powerline:*' formats       "%K{23}$sep1%F{123} ± ${FMT_BRANCH} %m%F{23}${FMT_PATH} "
+    zstyle ':vcs_info:git:powerline:*' actionformats "%K{23}$sep1%F{123} ± ${FMT_BRANCH}${FMT_ACTION} %m%F{23}${FMT_PATH} "
 
     # lofi formats
     # for details see here: https://github.com/Valodim/zshrc/blob/master/custom/96-vcs_info-lofi.zsh
-    zstyle ':vcs_info:*:powerline:*'   lofiformats   "${FMT_PATH} %K{27}$sep1%F{123} %s %F{27}"
-    zstyle ':vcs_info:hg:powerline:*'  lofiformats   "${FMT_PATH} %K{27}$sep1%F{123} ☿ %F{27}"
-    zstyle ':vcs_info:git:powerline:*' lofiformats   "${FMT_PATH} %K{27}$sep1%F{123} ± %F{27}"
+    zstyle ':vcs_info:*:powerline:*'   lofiformats   "%K{23}$sep1%F{123} %s %F{23}${FMT_PATH} "
+    zstyle ':vcs_info:hg:powerline:*'  lofiformats   "%K{23}$sep1%F{123} ☿ %F{23}${FMT_PATH} "
+    zstyle ':vcs_info:git:powerline:*' lofiformats   "%K{23}$sep1%F{123} ± %F{23}${FMT_PATH} "
 
     # see https://github.com/Valodim/zshrc/blob/master/custom/96-vcs_info-githooks.zsh
     # tracking formats: behind, ahead and seperator
