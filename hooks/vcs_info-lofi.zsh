@@ -96,7 +96,7 @@ bindkey '^G^L' prompt-vcs-hifi-pwd
 # set lofi to false for current directory, if any kind of git command is run
 vcs-hifi-pwd-hook () {
     local firstword=${${(z)1}[1]}
-    if [[ $firstword == git ]] || (( $+aliases[$firstword] )) && [[ $aliases[$firstword] == git* ]]; then
+    if [[ -n ${(M)VCS_INFO_backends:#$firstword} ]] || (( $+aliases[$firstword] )) && [[ -n ${(M)VCS_INFO_backends:#${${(z)aliases[$firstword]}[1]}} ]]; then
         # set to false, if still true for this path
         zstyle -t ":vcs_info:*:*:$PWD" lofi && zstyle ":vcs_info:*:*:$PWD*" lofi false
     fi
