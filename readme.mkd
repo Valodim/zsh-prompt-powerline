@@ -92,7 +92,7 @@ is also a widget to do that, which is bound to ^G^L by default.
 ![](http://mugenguild.com/~valodim/powerline/disambiguate.png)
 
 This hook replaces the path, which is normally shortened to the last three
-directories, with a non-ambiguous prefix version. Works with
+directories, with a non-ambiguous prefix version.
 
 ### signal names
 
