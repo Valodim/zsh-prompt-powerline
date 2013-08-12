@@ -38,7 +38,7 @@
 
     zstyle -s ":vcs_info:${vcs}:${usercontext}:${rrn}" stashformat format || return 0
 
-    if [[ -n $format && -s ${hook_com[base]}/.git/refs/stash ]] ; then
+    if [[ -n $format && -s ${hook_com[base_orig]}/.git/refs/stash ]] ; then
         # find number of stashed commits
         stashes=$(git stash list 2>/dev/null | wc -l)
         (( stashes )) || return 0
