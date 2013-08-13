@@ -35,6 +35,11 @@ zstyle ':prompt:*:fluttershy'   host-color 226
 # enable check-for-changes, for the ¹² indicators in git
 zstyle ':vcs_info:*:powerline:*' check-for-changes true
 
+# if you are using the new powerline symbols, uncomment these lines.
+# zstyle ':prompt:powerline:ps1' sep1-char ''
+# zstyle ':prompt:powerline:ps1' sep2-char ''
+# zstyle ':prompt:powerline:ps1' lock-char ''
+# zstyle ':prompt:powerline:ps1' branch-char ''
 
 ### load some optional hooks which add further functionality. uncomment to enable.
 

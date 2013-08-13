@@ -110,9 +110,15 @@ This prompt is configured using zstyles.
 
     zstyle ':prompt:powerline:ps1' sep1-char
     zstyle ':prompt:powerline:ps1' sep2-char
+    zstyle ':prompt:powerline:ps1' lock-char
+    zstyle ':prompt:powerline:ps1' branch-char
 
-These two styles allow specifying the powerline seperator characters to be used
-in the prompt. They default to '⮀' and '⮁' respectively.
+These styles allow specifying the powerline characters to be used in the
+prompt. They default to '⮀', '⮁', '⭤' and '⭠' respectively. Note that these are
+the OLD powerline characters, which were used in vim-powerline. The new
+powerline uses a different set ('', '', '', ''). If you can see those but
+not the old ones, you need to set the styles accordingly. Check out
+example\_config.zsh.
 
     zstyle ':prompt:powerline:ps1' hide-user
 

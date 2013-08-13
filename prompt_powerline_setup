@@ -72,12 +72,14 @@ prompt_powerline_precmd () {
     # preserve exitstatus for later (if only for a hook!)
     local exstat=$?
 
+    setopt localoptions noksharrays unset
+
     # have those here as well
-    local sep1 sep2
+    local sep1 sep2 lock_char branch_char
     zstyle -s ':prompt:poweline:ps1:' sep1-char sep1 || sep1='⮀'
     zstyle -s ':prompt:poweline:ps1:' sep2-char sep2 || sep2='⮁'
-
-    setopt localoptions noksharrays unset
+    zstyle -s ':prompt:poweline:ps1:' lock-char lock_char || lock_char='⭤'
+    zstyle -s ':prompt:poweline:ps1:' branch-char branch_char || branch_char='⭠'
 
     # the variable we add our bits to
     prompt_bits=( )
@@ -86,22 +88,22 @@ prompt_powerline_precmd () {
     if [[ -n $localhist ]]; then
         # disabled = red, enabled = blue, enabled for parent dir = yellow
         if [[ -n $localhist_disable ]]; then
-            prompt_bits+=( "%F{red}⭠ " )
+            prompt_bits+=( "%F{red}$branch_char " )
         elif [[ -n $localhist_specific ]]; then
-            prompt_bits+=( "%F{12}⭠ " )
+            prompt_bits+=( "%F{12}$branch_char " )
         else
-            prompt_bits+=( "%F{yellow}⭠ " )
+            prompt_bits+=( "%F{yellow}$branch_char " )
         fi
     fi
 
     # show stats for this dir
     if [[ ! -O $PWD ]]; then
         if [[ -w $PWD ]]; then
-            prompt_bits+=( "%F{blue}⭤ " )
+            prompt_bits+=( "%F{blue}$lock_char " )
         elif [[ -x $PWD ]]; then
-            prompt_bits+=( "%F{yellow}⭤ " )
+            prompt_bits+=( "%F{yellow}$lock_char " )
         elif [[ -r $PWD ]]; then
-            prompt_bits+=( "%F{red}⭤ " )
+            prompt_bits+=( "%F{red}$lock_char " )
         fi
     fi
     if [[ ! -w $PWD && ! -r $PWD ]]; then
@@ -178,9 +180,11 @@ prompt_powerline_setup () {
     autoload -U is-at-least
     is-at-least 4.3 || return 1
 
-    local sep1 sep2
+    local sep1 sep2 lock_char branch_char
     zstyle -s ':prompt:poweline:ps1:' sep1-char sep1 || sep1='⮀'
     zstyle -s ':prompt:poweline:ps1:' sep2-char sep2 || sep2='⮁'
+    zstyle -s ':prompt:poweline:ps1:' lock-char lock_char || lock_char='⭤'
+    zstyle -s ':prompt:poweline:ps1:' branch-char branch_char || branch_char='⭠'
 
     # load zsh/termcap
     zmodload zsh/terminfo
