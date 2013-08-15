@@ -142,12 +142,20 @@ prompt_powerline_ps1 () {
     setopt localoptions noksharrays extendedglob
 
     local host_color
-    if ! zstyle -s ":prompt:powerline:ps1:${HOST}" host-color host_color; then
+    # can we even make any assumptions about the terminal?
+    if ! (( $+terminfo[colors] )); then
+        host_color='green'
+    elif zstyle -s ":prompt:valodim:ps1:${HOST}" host-color host_color; then
+        # make sure it's within range
+        [[ host_color == <-> ]] && host_color=$(( host_color % $terminfo[colors] ))
+        # otherwise, don't care
+    else
         # get a number from the sha1 hash of the hostname
         host_color=${${"$(sha1sum <<< $HOST)"//[a-z]#/}[1,14]}
         # divide by 256/88/8/whatever
-        host_color=$(( host_color % $(echoti colors) ))
+        host_color=$(( host_color % $terminfo[colors] ))
     fi
+
 
     # hide username if it's my regular one (anyone else might wanna change this)
     local user=""
@@ -178,7 +186,18 @@ prompt_powerline_setup () {
     setopt localoptions noksharrays unset
 
     autoload -U is-at-least
-    is-at-least 4.3 || return 1
+    if ! is-at-least 4.3; then
+        echo 'the powerline prompt requires at least zsh version 4.3 (y'\''know, the one released in 2007)' >&2
+        return 1
+    fi
+
+    # zmodload zsh/termcap
+    zmodload zsh/terminfo
+    if ! (( $+terminfo[colors] )) || (( terminfo[colors] < 256 )); then
+        echo 'the powerline prompt is designed to work with 256 colors.
+a prompt with powerline patched font not supporting 256 colors is kind of a Rarity, isn'\''t it?' >&2
+        return 1
+    fi
 
     local sep1 sep2 lock_char branch_char
     zstyle -s ':prompt:poweline:ps1:' sep1-char sep1 || sep1='⮀'
@@ -186,18 +205,11 @@ prompt_powerline_setup () {
     zstyle -s ':prompt:poweline:ps1:' lock-char lock_char || lock_char='⭤'
     zstyle -s ':prompt:poweline:ps1:' branch-char branch_char || branch_char='⭠'
 
-    # load zsh/termcap
-    zmodload zsh/terminfo
-
     # load vcs_info styles
     autoload -Uz vcs_info
     prompt_powerline_vcsstyles
 
-    # if disambiguate-keeplast is available, load it
-    local -a tmp; tmp=( $^fpath/disambiguate-keeplast(N) )
-    (( $#tmp > 0 )) && autoload -U disambiguate-keeplast
-
-    # set up left-side prompt
+    # set up left-side prompt(s)
     prompt_powerline_ps1
     prompt_powerline_ps2
 
@@ -207,7 +219,7 @@ prompt_powerline_setup () {
     # we know add-zsh-hook has been loaded by promptinit
     add-zsh-hook precmd prompt_powerline_precmd
 
-    # no multiline so we don't need cr, but we do need both % and $ expansion
+    # as I said, fairly heavyweight...
     prompt_opts=( percent subst cr )
 
     return 0
