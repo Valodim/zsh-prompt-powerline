@@ -7,6 +7,10 @@ popular eponymous vim plugin, which works well for a dark background.
 To use it properly, you will obviously need to have a powerline patched font.
 For details, see here: https://github.com/Lokaltog/vim-powerline
 
+Since the wiki (and with it, the prepatched fonts) in that repository were
+taken down, I added a bunch of prepatched fonts to this repository.  See below
+for installation instructions.
+
 This prompt uses promptsubst. It does not use a right-side prompt, although
 RPROMPT will be cleared on load time to ensure compatibility.
 
@@ -45,6 +49,17 @@ There is also an indicator for the current SHLVL:
 
 Installation
 --
+
+To use this prompt, you will need to have a powerline patched font. The easiest
+way to get that is to copy one of the packaged .ttf fonts into ~/.fonts then
+run fc-cache, although this may or may not work depending on your distribution
+(works in debian). After that, tell your terminal emulator to use it, which is
+usually done in .Xresources. Here's what I use for rxvt-unicode:
+
+    urxvt*font:     xft:Bitstream Vera Sans Mono for Powerline:pixelsize=12
+
+You can also use the fontpatcher application from the vim-powerline repository
+linked above to patch your own fonts.
 
 This prompt uses ZSH's own prompt support functions. To install it, simply copy
 prompt\_powerline\_setup into some directory in your $fpath, or add the
