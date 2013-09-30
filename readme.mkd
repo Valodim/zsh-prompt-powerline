@@ -7,9 +7,9 @@ popular eponymous vim plugin, which works well for a dark background.
 To use it properly, you will obviously need to have a powerline patched font.
 For details, see here: https://github.com/Lokaltog/vim-powerline
 
-Since the wiki (and with it, the prepatched fonts) in that repository were
-taken down, I added a bunch of prepatched fonts to this repository.  See below
-for installation instructions.
+If you're looking for prepatched fonts, there are several presented by
+Lokaltog over at [the powerline-fonts repo](https://github.com/Lokaltog/powerline-fonts)
+under open licenses.
 
 This prompt uses promptsubst. It does not use a right-side prompt, although
 RPROMPT will be cleared on load time to ensure compatibility.
@@ -50,11 +50,23 @@ There is also an indicator for the current SHLVL:
 Installation
 --
 
-To use this prompt, you will need to have a powerline patched font. The easiest
-way to get that is to copy one of the packaged .ttf fonts into ~/.fonts then
-run fc-cache, although this may or may not work depending on your distribution
-(works in debian). After that, tell your terminal emulator to use it, which is
-usually done in .Xresources. Here's what I use for rxvt-unicode:
+You will need a font patched for Powerline. There are several open ones
+in [Lokaltog/powerline-fonts](https://github.com/Lokaltog/powerline-fonts)
+which work with the new glyphs. Other suggestions include [monoOne]
+(https://github.com/madmalik/monoOne).
+
+Refer to your distribution's means of installing fonts. Traditionally, this
+means placing a folder in a reasonable location (in debian it can be `/usr/share/fonts/truetype/`,
+`/usr/local/share/fonts` or `~/.fonts`) and calling `fc-cache -fv` as root
+and letting it do its thing. Some environments may also require you to log out
+before the new fonts will be seen.
+
+Recently, Lokaltog changed the glyphs used by Powerline to use a different part
+of the private use spectrum. This fork (maintained by @indrora) uses the new
+glyphs.
+
+Setting up your terminal is an important second step. For those using a terminal
+like URxvt, you should add something along these lines to your `~/.Xdefaults`:
 
     urxvt*font:     xft:Bitstream Vera Sans Mono for Powerline:pixelsize=12
 
@@ -129,11 +141,12 @@ This prompt is configured using zstyles.
     zstyle ':prompt:powerline:ps1' branch-char
 
 These styles allow specifying the powerline characters to be used in the
-prompt. They default to '⮀', '⮁', '⭤' and '⭠' respectively. Note that these are
-the OLD powerline characters, which were used in vim-powerline. The new
-powerline uses a different set ('', '', '', ''). If you can see those but
+prompt. They default to '', '', '', '', respectively. Note that these are
+the NEW powerline characters, which are used currently in vim-powerline. The old
+powerline uses a different set ( '⮀', '⮁', '⭤' and '⭠'  ). If you can see those but
 not the old ones, you need to set the styles accordingly. Check out
-example\_config.zsh.
+example\_config.zsh. You may also like to use Unicode characters which serve
+a close purpose.
 
     zstyle ':prompt:powerline:ps1' hide-user
 
