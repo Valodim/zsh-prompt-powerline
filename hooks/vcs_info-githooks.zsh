@@ -13,12 +13,12 @@
     zstyle -a ":vcs_info:${vcs}:${usercontext}:${rrn}" trackingformats formats || return 0
 
     # Are we on a remote-tracking branch?
-    remote=${$(git rev-parse --verify ${hook_com[branch]}@{upstream} \
+    remote=${$($vcs_comm[cmd] rev-parse --verify ${hook_com[branch]}@{upstream} \
         --symbolic-full-name 2>/dev/null)/refs\/remotes\/}
 
     if [[ -n ${remote} ]] ; then
-        ahead=$(git rev-list ${hook_com[branch]}@{upstream}..HEAD 2>/dev/null | wc -l)
-        behind=$(git rev-list HEAD..${hook_com[branch]}@{upstream} 2>/dev/null | wc -l)
+        ahead=$($vcs_comm[cmd] rev-list ${hook_com[branch]}@{upstream}..HEAD 2>/dev/null | wc -l)
+        behind=$($vcs_comm[cmd] rev-list HEAD..${hook_com[branch]}@{upstream} 2>/dev/null | wc -l)
         if (( ahead && behind )); then
             zformat -f tmp $formats[3] a:$ahead b:$behind
         elif (( ahead )); then
@@ -40,7 +40,7 @@
 
     if [[ -n $format && -s ${hook_com[base_orig]}/.git/refs/stash ]] ; then
         # find number of stashed commits
-        stashes=$(git stash list 2>/dev/null | wc -l)
+        stashes=$($vcs_comm[cmd] stash list 2>/dev/null | wc -l)
         (( stashes )) || return 0
 
         # add to misc

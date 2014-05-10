@@ -45,7 +45,7 @@ is-at-least 4.3.12 || return
 
     # git has the only detect mechanism that does not set the basedir. sheesh.
     if (( $+vcs_comm[gitdir] )); then
-        hook_com[base]=${PWD%/${$( ${vcs_comm[cmd]} rev-parse --show-prefix )%/##}}
+        hook_com[base]=${PWD%/${$( ${vcs_comm[cmd]} rev-parse --show-prefix 2>/dev/null )%/##}}
     elif (( $+vcs_comm[base] )); then
         hook_com[base]=$vcs_comm[basedir]
     else
