@@ -63,7 +63,11 @@ prompt_powerline_vcsstyles () {
     zstyle ':vcs_info:git:powerline:*' trackingformats "%%F{46}+%a%%f" "%%F{160}-%b%%f" "%%F{46}+%a%%F{123}/%f%%F{160}-%b%%f"
 
     # stash format
-    zstyle ':vcs_info:git:powerline:*' stashformat "%%F{81}$sep2 %s "
+    zstyle ':vcs_info:git:powerline:*' stashformat "%%F{81}$sep2 %%B%s %b"
+
+    # stgit formats
+    zstyle ':vcs_info:git:powerline:*' patch-format "%%F{186}$sep2%%F{81} %p %n/%a "
+    zstyle ':vcs_info:git:powerline:*' nopatch-format "$sep2 0/%a "
 
 }
 
