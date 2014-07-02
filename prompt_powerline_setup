@@ -80,11 +80,11 @@ prompt_powerline_precmd () {
 
     # have those here as well
     local sep1 sep2 lock_char branch_char
-    zstyle -s ':prompt:poweline:ps1:' sep1-char sep1 || sep1='⮀'
-    zstyle -s ':prompt:poweline:ps1:' sep2-char sep2 || sep2='⮁'
-    zstyle -s ':prompt:poweline:ps1:' lock-char lock_char || lock_char='⭤'
-    zstyle -s ':prompt:poweline:ps1:' branch-char branch_char || branch_char='⭠'
 
+    zstyle -s ':prompt:poweline:ps1:' sep1-char sep1 || sep1=$(echo -n '\xEE\x82\xB0')
+    zstyle -s ':prompt:poweline:ps1:' sep2-char sep2 || sep2=$(echo -n '\xEE\x82\xB1')
+    zstyle -s ':prompt:poweline:ps1:' lock-char lock_char || lock_char=$(echo -n '\xEE\x82\xA2')
+    zstyle -s ':prompt:poweline:ps1:' branch-char branch_char || branch_char=$(echo -n '\xEE\x82\xA0')
     # the variable we add our bits to
     prompt_bits=( )
 
@@ -204,10 +204,10 @@ a prompt with powerline patched font not supporting 256 colors is kind of a Rari
     fi
 
     local sep1 sep2 lock_char branch_char
-    zstyle -s ':prompt:poweline:ps1:' sep1-char sep1 || sep1='⮀'
-    zstyle -s ':prompt:poweline:ps1:' sep2-char sep2 || sep2='⮁'
-    zstyle -s ':prompt:poweline:ps1:' lock-char lock_char || lock_char='⭤'
-    zstyle -s ':prompt:poweline:ps1:' branch-char branch_char || branch_char='⭠'
+    zstyle -s ':prompt:poweline:ps1:' sep1-char sep1 || sep1=$(echo -n '\xEE\x82\xB0')
+    zstyle -s ':prompt:poweline:ps1:' sep2-char sep2 || sep2=$(echo -n '\xEE\x82\xB1')
+    zstyle -s ':prompt:poweline:ps1:' lock-char lock_char || lock_char=$(echo -n '\xEE\x82\xA2')
+    zstyle -s ':prompt:poweline:ps1:' branch-char branch_char || branch_char=$(echo -n '\xEE\x82\xA0')
 
     # load vcs_info styles
     autoload -Uz vcs_info
@@ -230,3 +230,4 @@ a prompt with powerline patched font not supporting 256 colors is kind of a Rari
 }
 
 [[ -o kshautoload ]] || prompt_powerline_setup "$@"
+
